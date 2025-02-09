@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Bloqueador de publicaciones en español",
-  "version": "1.3",
+  "version": "1.4",
   "description": "Bloquea publicaciones en español/castellano de Facebook",
   "permissions": [
     "activeTab",
@@ -11,6 +11,16 @@
   ],
   "action": {
     "default_popup": "popup.html"
-  }
-  // Se ha eliminado la sección content_scripts por completo
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.facebook.com/*"
+      ],
+      "js": [
+        "dummy.js" // Archivo dummy
+      ],
+      "run_at": "document_idle"
+    }
+  ]
 }
