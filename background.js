@@ -1,21 +1,26 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "bloquearPublicaciones") {
     chrome.scripting.executeScript({
-      tabId: sender.tab.id,  // Inyectar en la pestaña que envió el mensaje
+      target: { tabId: sender.tab.id }, // Usa 'target' para mayor claridad
       function: () => {
-        // Inyectar script de detección de idioma (puedes usar una librería como franc)
+        // Inyectar script de detección de idioma (franc) - Optimizado
         const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/franc@4.1.1/dist/franc.min.js'; // Reemplaza con la URL de tu librería
+        script.src = 'https://cdn.jsdelivr.net/npm/franc@4.1.1/dist/franc.min.js';
+        script.onload = () => { // Ejecutar bloquearPublicaciones() después de cargar franc
+          bloquearPublicaciones();
+        };
         document.head.appendChild(script);
 
-        // Función para bloquear publicaciones (adaptada del código anterior)
         function bloquearPublicaciones() {
-          const publicaciones = document.querySelectorAll('[role="article"]'); // Ejemplo de selector (¡revisar!)
+          // Selectores actualizados y robustos (¡Inspeccionar Facebook para los más recientes!)
+          // Este selector es un ejemplo, debes inspeccionar la página de Facebook
+          // y copiar el selector correcto para los posts.
+          const publicaciones = document.querySelectorAll('[role="article"]');
           publicaciones.forEach(publicacion => {
             const texto = publicacion.textContent.toLowerCase();
             try {
-              const idioma = franc(texto); // Detectar idioma con la librería
-              if (idioma === 'spa') { // Bloquear si es español
+              const idioma = franc(texto);
+              if (idioma === 'spa') {
                 publicacion.remove();
               }
             } catch (error) {
@@ -24,17 +29,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           });
         }
 
-        bloquearPublicaciones(); // Ejecutar al hacer clic en el botón
+        // Observador de cambios en el DOM - Con optimización para el rendimiento
+        let observer = new MutationObserver(bloquearPublicaciones);
+        const targetNode = document.body; // Observar el body
+        const config = { childList: true, subtree: true }; // Observar hijos y subárbol
+        observer.observe(targetNode, config);
 
-        // Observar cambios en el DOM para bloquear nuevas publicaciones (¡cuidado con el rendimiento!)
-        const observer = new MutationObserver(bloquearPublicaciones);
-        observer.observe(document.body, { childList: true, subtree: true });
-
-        // Detener la observación cuando se cierra la pestaña (opcional)
+        // Desconectar el observador al salir de la página
         window.addEventListener('beforeunload', () => {
           observer.disconnect();
         });
-
       }
     });
   }
