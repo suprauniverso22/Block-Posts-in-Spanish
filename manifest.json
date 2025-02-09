@@ -7,7 +7,7 @@
     "activeTab",
     "storage",
     "scripting",
-    "webNavigation" // Permiso para detectar cambios en la página
+    "webNavigation"
   ],
   "action": {
     "default_popup": "popup.html"
@@ -17,10 +17,8 @@
       "matches": [
         "https://www.facebook.com/*"
       ],
-      "js": [
-        "content.js"
-      ],
-      "run_at": "document_idle" // Ejecutar después de que se carga el contenido
+      "js": [], // La lista de scripts debe estar vacía
+      "run_at": "document_idle"
     }
   ]
 }
