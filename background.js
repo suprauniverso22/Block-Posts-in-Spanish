@@ -1,7 +1,7 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "bloquearPublicaciones") {
     chrome.scripting.executeScript({
-      target: { tabId: sender.tab.id }, // Usa 'target' para mayor claridad
+      target: { tabId: sender.tab.id }, // <-- Cambio importante: usar 'target'
       function: () => {
         // Inyectar script de detección de idioma (franc) - Optimizado
         const script = document.createElement('script');
