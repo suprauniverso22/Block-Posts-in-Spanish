@@ -1,12 +1,13 @@
 {
   "manifest_version": 3,
   "name": "Bloqueador de publicaciones en español",
-  "version": "1.0",
+  "version": "1.1",
   "description": "Bloquea publicaciones en español/castellano de Facebook",
   "permissions": [
     "activeTab",
     "storage",
-    "scripting"
+    "scripting",
+    "webNavigation" // Permiso para detectar cambios en la página
   ],
   "action": {
     "default_popup": "popup.html"
@@ -18,7 +19,8 @@
       ],
       "js": [
         "content.js"
-      ]
+      ],
+      "run_at": "document_idle" // Ejecutar después de que se carga el contenido
     }
   ]
 }
